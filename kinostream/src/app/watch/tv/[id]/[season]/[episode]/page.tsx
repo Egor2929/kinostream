@@ -3,7 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { WatchExperience } from "@/components/watch/WatchExperience";
-import { getTVDetails, getTVVideos, pickBestVideo } from "@/lib/tmdb";
+import { resolveTrailer } from "@/lib/trailers";
+import { getTVDetails } from "@/lib/tmdb";
+import { buildMetadata, tmdbImageUrl, tvDescription } from "@/lib/seo";
+import { formatYear } from "@/lib/utils";
 
 interface PageProps {
   params: Promise<{ id: string; season: string; episode: string }>;
@@ -13,11 +16,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id, season, episode } = await params;
   try {
     const show = await getTVDetails(Number(id));
-    return {
+    return buildMetadata({
       title: `Смотреть: ${show.title} S${season}E${episode}`,
-    };
+      description: tvDescription(show),
+      path: `/watch/tv/${id}/${season}/${episode}`,
+      image: tmdbImageUrl(show.backdrop_path ?? show.poster_path, "w1280"),
+      type: "video.tv_show",
+      noIndex: true,
+    });
   } catch {
-    return { title: "Просмотр" };
+    notFound();
   }
 }
 
@@ -32,31 +40,32 @@ export default async function WatchTVPage({ params }: PageProps) {
   }
 
   let show;
-  let videos;
 
   try {
-    [show, videos] = await Promise.all([
-      getTVDetails(tvId),
-      getTVVideos(tvId),
-    ]);
+    show = await getTVDetails(tvId);
   } catch {
     notFound();
   }
 
-  const video = pickBestVideo(videos);
   const title = `${show.title} — S${seasonNum}:E${episodeNum}`;
+  const { trailer } = await resolveTrailer({
+    tmdbId: show.id,
+    kind: "tv",
+    title: show.title,
+    year: formatYear(show.first_air_date) || undefined,
+  });
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <Link
         href={`/tv/${show.id}`}
-        className="mb-6 inline-flex items-center gap-2 text-sm text-zinc-400 transition hover:text-amber-400"
+        className="mb-6 inline-flex cursor-pointer items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-rose-400"
       >
         <ArrowLeft className="h-4 w-4" />
         Назад к сериалу
       </Link>
 
-      <h1 className="mb-2 font-display text-2xl font-bold text-white sm:text-3xl">
+      <h1 className="mb-2 text-2xl font-bold text-white sm:text-3xl">
         {show.title}
       </h1>
       <p className="mb-6 text-zinc-500">
@@ -69,7 +78,7 @@ export default async function WatchTVPage({ params }: PageProps) {
         kind="tv"
         season={seasonNum}
         episode={episodeNum}
-        youtubeKey={video?.key ?? null}
+        trailer={trailer}
       />
 
       {show.seasons.length > 0 && (
@@ -78,10 +87,10 @@ export default async function WatchTVPage({ params }: PageProps) {
             <Link
               key={s.id}
               href={`/watch/tv/${show.id}/${s.season_number}/1`}
-              className={`rounded-lg px-3 py-1.5 text-sm transition ${
+              className={`cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-colors duration-200 ${
                 s.season_number === seasonNum
-                  ? "bg-amber-500 text-black font-medium"
-                  : "border border-white/10 text-zinc-400 hover:border-amber-400/50"
+                  ? "bg-rose-600 font-medium text-white"
+                  : "border border-white/8 text-slate-400 hover:border-rose-600/40"
               }`}
             >
               {s.name}

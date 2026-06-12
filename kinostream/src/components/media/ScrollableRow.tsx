@@ -41,38 +41,53 @@ export function ScrollableRow({ items, type }: ScrollableRowProps) {
     });
   }
 
+  const arrowClass =
+    "absolute top-1/2 z-20 hidden -translate-y-1/2 cursor-pointer rounded-lg border border-white/8 bg-black/90 p-2.5 text-white opacity-70 transition-all duration-200 hover:border-rose-600/40 hover:text-rose-400 hover:opacity-100 group-hover/row:opacity-100 md:flex";
+
   return (
     <div className="group/row relative">
       {canLeft && (
-        <button
-          type="button"
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/80 p-2.5 text-white opacity-0 shadow-xl backdrop-blur-sm transition hover:border-amber-400/50 hover:text-amber-400 group-hover/row:opacity-100 md:flex"
-          aria-label="Прокрутить влево"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
+        <>
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-black to-transparent"
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            onClick={() => scroll("left")}
+            className={`left-0 ${arrowClass}`}
+            aria-label="Прокрутить влево"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+        </>
       )}
       {canRight && (
-        <button
-          type="button"
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-white/10 bg-black/80 p-2.5 text-white opacity-0 shadow-xl backdrop-blur-sm transition hover:border-amber-400/50 hover:text-amber-400 group-hover/row:opacity-100 md:flex"
-          aria-label="Прокрутить вправо"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
+        <>
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-black to-transparent"
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            onClick={() => scroll("right")}
+            className={`right-0 ${arrowClass}`}
+            aria-label="Прокрутить вправо"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </>
       )}
 
       <div
         ref={ref}
-        className="scrollbar-hide flex gap-4 overflow-x-auto px-4 pb-2 scroll-smooth sm:px-6"
+        className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 scroll-smooth sm:px-6"
       >
         {items.map((item, i) => (
           <div
             key={item.id}
-            className="w-36 shrink-0 animate-fade-up sm:w-40 md:w-44"
-            style={{ animationDelay: `${Math.min(i * 40, 400)}ms` }}
+            className="w-36 shrink-0 snap-start animate-fade-up sm:w-40 md:w-44"
+            style={{ animationDelay: `${Math.min(i * 30, 300)}ms` }}
           >
             <MediaCard item={item} type={type} />
           </div>

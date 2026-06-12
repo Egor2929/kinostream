@@ -3,6 +3,8 @@
  * Add your own licensed CDN embed here via NEXT_PUBLIC_CUSTOM_EMBED_URL.
  */
 
+import type { Trailer } from "@/types/media";
+
 export type MediaKind = "movie" | "tv";
 
 export interface PlaybackParams {
@@ -11,7 +13,7 @@ export interface PlaybackParams {
   season?: number;
   episode?: number;
   title?: string;
-  youtubeKey?: string | null;
+  trailer?: Trailer | null;
 }
 
 export interface PlaybackSource {
@@ -23,11 +25,11 @@ export interface PlaybackSource {
 
 const SOURCES: PlaybackSource[] = [
   {
-    id: "youtube",
+    id: "trailer",
     name: "Трейлер",
-    resolve({ youtubeKey }) {
-      if (!youtubeKey) return null;
-      return `https://www.youtube.com/embed/${youtubeKey}?autoplay=1&rel=0&modestbranding=1`;
+    resolve({ trailer }) {
+      if (!trailer?.embedUrl) return null;
+      return trailer.embedUrl;
     },
   },
   {

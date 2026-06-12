@@ -10,14 +10,12 @@ export function CastRow({ cast }: CastRowProps) {
   if (cast.length === 0) return null;
 
   return (
-    <section className="py-6">
-      <h2 className="mb-4 px-4 font-display text-xl font-bold text-white sm:px-0">
-        В ролях
-      </h2>
-      <div className="flex gap-4 overflow-x-auto pb-2">
+    <section className="py-8">
+      <h2 className="mb-5 px-4 text-xl font-bold text-white sm:px-0">В ролях</h2>
+      <div className="scrollbar-hide flex gap-4 overflow-x-auto px-4 pb-2 sm:px-0">
         {cast.map((person) => (
           <div key={person.id} className="w-24 shrink-0 text-center sm:w-28">
-            <div className="relative mx-auto aspect-square w-20 overflow-hidden rounded-full bg-zinc-800 sm:w-24">
+            <div className="relative mx-auto aspect-square w-20 overflow-hidden rounded-full border border-white/8 bg-surface sm:w-24">
               <Image
                 src={
                   person.profile_path
@@ -33,7 +31,7 @@ export function CastRow({ cast }: CastRowProps) {
             <p className="mt-2 line-clamp-2 text-xs font-medium text-white">
               {person.name}
             </p>
-            <p className="line-clamp-1 text-[10px] text-zinc-500">
+            <p className="line-clamp-1 text-[10px] text-slate-500">
               {person.character}
             </p>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { Trailer } from "@/types/media";
 import type { MediaKind } from "@/lib/sources";
 import { PreRollAd } from "./PreRollAd";
 import { VideoPlayer } from "./VideoPlayer";
@@ -11,7 +12,7 @@ interface WatchExperienceProps {
   kind: MediaKind;
   season?: number;
   episode?: number;
-  youtubeKey?: string | null;
+  trailer?: Trailer | null;
   adDuration?: number;
 }
 
@@ -21,7 +22,7 @@ export function WatchExperience({
   kind,
   season,
   episode,
-  youtubeKey,
+  trailer,
   adDuration,
 }: WatchExperienceProps) {
   const [adWatched, setAdWatched] = useState(false);
@@ -45,7 +46,7 @@ export function WatchExperience({
       kind={kind}
       season={season}
       episode={episode}
-      youtubeKey={youtubeKey}
+      trailer={trailer}
     />
   );
 }

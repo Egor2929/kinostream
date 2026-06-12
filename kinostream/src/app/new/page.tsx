@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import { MediaGrid } from "@/components/media/MediaGrid";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { getNowPlaying, getUpcoming } from "@/lib/tmdb";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Новинки",
-};
+export const revalidate = 3600;
+
+export const metadata: Metadata = buildMetadata({
+  title: "Новинки кино",
+  description:
+    "Новинки кино и скоро в прокате на KinoRegin — свежие премьеры, актуальные релизы и анонсы.",
+  path: "/new",
+});
 
 export default async function NewPage() {
   const [nowPlaying, upcoming] = await Promise.all([
@@ -22,14 +28,14 @@ export default async function NewPage() {
       />
 
       <section className="mt-10">
-        <h2 className="mb-6 font-display text-2xl font-bold text-amber-400">
+        <h2 className="mb-6 text-xl font-bold text-rose-400">
           Сейчас в кино
         </h2>
         <MediaGrid items={nowPlaying} type="movie" />
       </section>
 
       <section className="mt-14">
-        <h2 className="mb-6 font-display text-2xl font-bold text-amber-400">
+        <h2 className="mb-6 text-xl font-bold text-rose-400">
           Скоро
         </h2>
         <MediaGrid items={upcoming} type="movie" />

@@ -28,7 +28,6 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    // Use a ref to avoid setState-in-effect lint issue
     const timer = setTimeout(() => setMenuOpen(false), 0);
     return () => clearTimeout(timer);
   }, [pathname]);
@@ -44,23 +43,23 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed top-0 z-50 w-full transition-all duration-500",
+          "fixed top-0 z-50 w-full transition-all duration-200",
           scrolled
-            ? "glass-panel-heavy shadow-2xl shadow-black/50 border-b border-white/5"
-            : "border-b border-transparent bg-gradient-to-b from-black/90 via-black/30 to-transparent",
+            ? "glass-panel-heavy"
+            : "border-b border-transparent bg-gradient-to-b from-black/90 to-transparent",
         )}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:gap-6 sm:px-6">
-          <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 shadow-md shadow-amber-950/40 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(232,163,23,0.3)]">
-              <Film className="h-5 w-5 text-black transition-transform duration-300 group-hover:rotate-12" />
+          <Link href="/" className="group flex shrink-0 items-center gap-2.5 cursor-pointer">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-600 transition-colors duration-200 group-hover:bg-rose-500">
+              <Film className="h-5 w-5 text-white" />
             </div>
-            <span className="hidden font-display text-2xl tracking-wider text-white sm:block transition-colors duration-300">
-              KINO<span className="text-amber-400 group-hover:text-amber-300 transition-colors duration-300">STREAM</span>
+            <span className="hidden font-display text-2xl tracking-wide text-white sm:block">
+              KINO<span className="text-rose-500">REGIN</span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1.5 md:flex" aria-label="Основная навигация">
+          <nav className="hidden items-center gap-1 md:flex" aria-label="Основная навигация">
             {NAV.map(({ href, label }) => {
               const active =
                 href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -69,17 +68,14 @@ export function Header() {
                   key={href}
                   href={href}
                   className={cn(
-                    "relative rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-300",
+                    "rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer",
                     active
-                      ? "text-amber-400 bg-amber-400/5 ring-1 ring-amber-400/15"
-                      : "text-zinc-400 hover:bg-white/5 hover:text-white",
+                      ? "bg-rose-600/10 text-rose-400"
+                      : "text-slate-400 hover:bg-white/5 hover:text-white",
                   )}
                   aria-current={active ? "page" : undefined}
                 >
                   {label}
-                  {active && (
-                    <span className="absolute inset-x-4 -bottom-px h-0.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(232,163,23,0.8)]" />
-                  )}
                 </Link>
               );
             })}
@@ -92,7 +88,7 @@ export function Header() {
           >
             <div className="relative w-full group/search">
               <Search
-                className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500 transition-colors duration-300 group-focus-within/search:text-amber-400"
+                className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 transition-colors duration-200 group-focus-within/search:text-rose-500"
                 aria-hidden="true"
               />
               <input
@@ -100,7 +96,7 @@ export function Header() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Найти фильм или сериал..."
-                className="w-full rounded-full border border-white/5 bg-white/3 py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-zinc-500 transition-all duration-300 focus:border-amber-500/30 focus:bg-black/60 focus:ring-2 focus:ring-amber-500/10 focus:shadow-[0_0_20px_rgba(232,163,23,0.06)] outline-none"
+                className="min-h-[44px] w-full rounded-lg border border-white/8 bg-surface py-2.5 pl-10 pr-4 text-base text-white placeholder:text-slate-500 transition-colors duration-200 focus:border-rose-600/40 focus:bg-surface-elevated focus:outline-none sm:min-h-0 sm:text-sm"
                 aria-label="Поиск"
               />
             </div>
@@ -109,7 +105,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-zinc-300 transition hover:border-amber-400/40 hover:text-amber-400 md:hidden"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-white/8 text-slate-300 transition-colors duration-200 hover:border-rose-600/40 hover:text-rose-400 md:hidden"
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
           >
@@ -120,10 +116,10 @@ export function Header() {
 
       {menuOpen && (
         <nav
-          className="fixed inset-x-0 top-16 z-40 border-b border-white/5 bg-[#050508]/95 p-4 backdrop-blur-2xl md:hidden"
+          className="fixed inset-x-0 top-16 z-40 border-b border-white/8 bg-surface p-4 md:hidden"
           aria-label="Мобильная навигация"
         >
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1">
             {NAV.map(({ href, label }) => {
               const active =
                 href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -132,10 +128,10 @@ export function Header() {
                   key={href}
                   href={href}
                   className={cn(
-                    "rounded-xl px-4 py-3 text-base font-medium transition-all duration-300",
+                    "rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 cursor-pointer",
                     active
-                      ? "bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20"
-                      : "text-zinc-300 hover:bg-white/5",
+                      ? "bg-rose-600/10 text-rose-400"
+                      : "text-slate-300 hover:bg-white/5",
                   )}
                 >
                   {label}

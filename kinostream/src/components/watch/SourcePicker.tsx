@@ -32,10 +32,10 @@ export function SourcePicker({ sources, activeId, onChange }: SourcePickerProps)
             aria-selected={active}
             onClick={() => onChange(source.id)}
             className={cn(
-              "rounded-full px-4 py-2 text-sm font-medium transition",
+              "cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200",
               active
-                ? "bg-amber-500 text-black"
-                : "border border-white/10 text-zinc-400 hover:border-amber-400/40 hover:text-white",
+                ? "bg-rose-600 text-white"
+                : "border border-white/8 text-slate-400 hover:border-rose-600/40 hover:text-white",
             )}
           >
             {source.name}

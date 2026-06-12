@@ -35,6 +35,16 @@ export function HeroSkeleton() {
   );
 }
 
+export function MediaGridSkeleton({ count = 18 }: { count?: number }) {
+  return (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      {Array.from({ length: count }).map((_, i) => (
+        <MediaCardSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
 export function ContentRowSkeleton() {
   return (
     <section className="py-6 px-4 sm:px-6">

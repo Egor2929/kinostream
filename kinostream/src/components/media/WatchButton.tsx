@@ -25,11 +25,8 @@ export function WatchButton({
       : `/watch/movie/${id}`;
 
   return (
-    <Link
-      href={href}
-      className={`btn-glow inline-flex min-h-[48px] items-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-bold text-black ${className}`}
-    >
-      <Play className="h-5 w-5 fill-black" />
+    <Link href={href} className={`btn-cta min-h-[48px] px-6 py-3 text-sm ${className}`}>
+      <Play className="h-5 w-5 fill-white" />
       {label}
     </Link>
   );
