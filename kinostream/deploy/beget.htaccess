@@ -2,4 +2,9 @@ PassengerNodejs /home/m/martyntm/kinoregin.ru/app/.node/bin/node
 PassengerAppRoot /home/m/martyntm/kinoregin.ru/app
 PassengerAppType node
 PassengerStartupFile server.js
+PassengerAppEnv production
 PassengerFriendlyErrorPages off
+# Keep one warm instance: Next.js + SWC cold start is slow and otherwise
+# trips Passenger's start timeout, returning a 500 on the first request
+# after an idle shutdown.
+PassengerMinInstances 1

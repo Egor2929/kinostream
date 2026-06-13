@@ -122,7 +122,9 @@ def main() -> None:
         PassengerAppRoot {APP_DIR}
         PassengerAppType node
         PassengerStartupFile server.js
+        PassengerAppEnv production
         PassengerFriendlyErrorPages off
+        PassengerMinInstances 1
         """
     ).strip()
 
