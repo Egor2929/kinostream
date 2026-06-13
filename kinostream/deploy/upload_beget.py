@@ -26,10 +26,11 @@ SITE_DIR = f"{HOME}/kinoregin.ru"
 APP_DIR = f"{SITE_DIR}/app"
 NODE_DIR = f"{APP_DIR}/.node"
 NODE_BIN = f"{NODE_DIR}/bin/node"
+NPM_BIN = f"{NODE_DIR}/bin/npm"
 NODE_VERSION = "v20.18.3"
 NODE_TAR = f"node-{NODE_VERSION}-linux-x64.tar.xz"
 NODE_URL = f"https://nodejs.org/dist/{NODE_VERSION}/{NODE_TAR}"
-PATH_EXPORT = f"export PATH={NODE_BIN}:$PATH"
+PATH_EXPORT = f"export PATH={NODE_DIR}/bin:$PATH"
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = [
@@ -152,7 +153,9 @@ EOF
         ln -s {APP_DIR}/public public_html
         mkdir -p {APP_DIR}/tmp
         touch {APP_DIR}/tmp/restart.txt
-        chmod -R a+rX {NODE_DIR} {APP_DIR}/node_modules {APP_DIR}/.next {APP_DIR}/public {APP_DIR}/server.js
+        chmod -R a+rX {NODE_DIR} {APP_DIR}/.next {APP_DIR}/public {APP_DIR}/server.js
+        find {APP_DIR}/node_modules -name '*.node' -exec chmod a+rx {{}} +
+        chmod -R a+rx {APP_DIR}/node_modules/.bin
         test -f {APP_DIR}/.next/BUILD_ID && cat {APP_DIR}/.next/BUILD_ID
         """,
         timeout=900,

@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 2592000,
+    // Beget blocks server-side fetches for /_next/image; load TMDB URLs in the browser.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
