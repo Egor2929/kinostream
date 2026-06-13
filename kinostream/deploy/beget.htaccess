@@ -1,5 +1,5 @@
-PassengerNodejs /home/m/martyntm/.local/bin/node
-PassengerAppRoot /home/m/martyntm/kinoregin.ru/kinostream
+PassengerNodejs /home/m/martyntm/kinoregin.ru/app/.node/bin/node
+PassengerAppRoot /home/m/martyntm/kinoregin.ru/app
 PassengerAppType node
 PassengerStartupFile server.js
 PassengerFriendlyErrorPages off

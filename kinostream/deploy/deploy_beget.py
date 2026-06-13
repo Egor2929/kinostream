@@ -3,12 +3,19 @@
 
 from __future__ import annotations
 
+import io
 import os
 import sys
 import textwrap
 import time
 
 import paramiko
+
+# Windows console may not render Next.js build unicode output.
+if hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "buffer"):
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 HOST = os.environ.get("BEGET_HOST", "martyntm.beget.tech")
 USER = os.environ.get("BEGET_USER", "martyntm")
@@ -29,6 +36,8 @@ AD_DURATION = os.environ.get("NEXT_PUBLIC_AD_DURATION", "15")
 NODE_VERSION = "v20.18.3"
 NODE_TAR = f"node-{NODE_VERSION}-linux-x64.tar.xz"
 NODE_URL = f"https://nodejs.org/dist/{NODE_VERSION}/{NODE_TAR}"
+LOCAL_BIN = f"{HOME}/.local/bin"
+PATH_EXPORT = f"export PATH={LOCAL_BIN}:$PATH"
 
 
 def run(client: paramiko.SSHClient, cmd: str, timeout: int = 600) -> tuple[int, str, str]:
@@ -89,7 +98,8 @@ def main() -> None:
     print("Connecting to Docker...")
     docker = connect_docker(outer)
 
-    node_path = f"{HOME}/.local/bin/node"
+    node_path = f"{LOCAL_BIN}/node"
+    npm_path = f"{LOCAL_BIN}/npm"
     _, out, _ = run(docker, f"test -x {node_path} && {node_path} -v || echo MISSING")
     if "MISSING" in out:
         print("Installing Node.js into ~/.local ...")
@@ -104,7 +114,7 @@ def main() -> None:
                 tar xf {NODE_TAR} --strip-components=1
                 rm -f {NODE_TAR}
                 {node_path} -v
-                npm -v
+                {npm_path} -v
                 """
             ).strip(),
             timeout=900,
@@ -136,7 +146,7 @@ def main() -> None:
 
     run(
         docker,
-        f"export PATH={HOME}/.local/bin:$PATH && cd {APP_DIR} && npm ci && npm run build",
+        f"{PATH_EXPORT} && cd {APP_DIR} && npm ci && npm run build",
         timeout=1800,
     )
 

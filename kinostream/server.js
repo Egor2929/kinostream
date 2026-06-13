@@ -4,10 +4,13 @@ const next = require("next");
 
 const app = next({ dev: false });
 const handle = app.getRequestHandler();
+const port = process.env.PORT || 3000;
 
-module.exports = app.prepare().then(() =>
+app.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
-  }),
-);
+  }).listen(port, () => {
+    console.log(`> Ready on http://127.0.0.1:${port}`);
+  });
+});
